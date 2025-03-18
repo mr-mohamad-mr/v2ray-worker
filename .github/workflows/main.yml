@@ -1,0 +1,28 @@
+name: Deploy
+
+on: [push]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install Wrangler CLI
+        run: npm install -g @cloudflare/wrangler
+
+      - name: Verify Wrangler Installation
+        run: wrangler --version
+
+      - name: Replace KV_NAME in wrangler.toml
+        run: sed -i "s/KV_NAME/${{ secrets.KV_NAME }}/g" wrangler.toml
+
+      - name: Deploy with Wrangler
+        run: wrangler deploy --api-token ${{ secrets.CF_API_TOKEN }} --account-id ${{ secrets.CF_ACCOUNT_ID }}
