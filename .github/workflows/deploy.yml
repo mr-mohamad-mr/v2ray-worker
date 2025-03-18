@@ -20,6 +20,9 @@ jobs:
     - name: Install modules
       run: npm i wrangler@latest
 
+    - name: Install Wrangler CLI
+      run: npm install -g @cloudflare/wrangler
+
     - name: Build
       run: npx wrangler build
 
@@ -28,4 +31,3 @@ jobs:
 
     - name: Deploy
       run: sed -i "s/KV_NAME/{{ secrets.KV_NAME }}/g" wrangler.toml && wrangler deploy --api-token ${{ secrets.CF_API_TOKEN }} --account-id ${{ secrets.CF_ACCOUNT_ID }}
-
